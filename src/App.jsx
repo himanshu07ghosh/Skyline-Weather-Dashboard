@@ -3,7 +3,7 @@ import SearchBar from './components/SearchBar'
 import CurrentWeather from './components/CurrentWeather'
 import HourlyForecast from './components/HourlyForecast'
 import Forecast from './components/Forecast'
-import { getWeatherByCity, getWeatherByCoords } from './api/weather'
+import { getWeatherByCity, getWeatherByCoords } from './api/weather-openmeteo'
 import './App.css'
 
 const HOME_CITY = 'Dehradun'
