@@ -3,6 +3,8 @@ import WeatherIcon from './WeatherIcon'
 const WEEKDAY = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat']
 
 export default function Forecast({ days, units }) {
+  if (!days || days.length === 0) return null
+
   const tempUnit = units === 'metric' ? '°' : '°'
 
   return (
@@ -15,17 +17,22 @@ export default function Forecast({ days, units }) {
         {days.map((day, i) => {
           const date = new Date(day.date)
           const label = i === 0 ? 'Today' : WEEKDAY[date.getUTCDay()]
+          
+          // FIX: Ensure pop is a number between 0-100
+          const rainChance = typeof day.pop === 'number' ? Math.round(day.pop) : 0
+          const showRain = rainChance > 0
+          
           return (
             <div className="forecast-card" key={day.date}>
               <p className="forecast-day">{label}</p>
               <WeatherIcon condition={day.condition} icon={day.icon} className="forecast-icon" />
-              <p className="forecast-desc">{day.description}</p>
+              <p className="forecast-desc">{day.description || day.condition}</p>
               <div className="forecast-temps">
                 <span className="forecast-max">{Math.round(day.max)}{tempUnit}</span>
                 <span className="forecast-min">{Math.round(day.min)}{tempUnit}</span>
               </div>
-              {day.pop > 0 && (
-                <p className="forecast-pop">☂ {Math.round(day.pop * 100)}%</p>
+              {showRain && (
+                <p className="forecast-pop">☂ {rainChance}%</p>
               )}
             </div>
           )
