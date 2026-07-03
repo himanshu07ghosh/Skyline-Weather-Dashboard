@@ -18,7 +18,7 @@ export default function Forecast({ days, units }) {
           const date = new Date(day.date)
           const label = i === 0 ? 'Today' : WEEKDAY[date.getUTCDay()]
           
-          // FIX: Ensure pop is a number between 0-100
+          // Ensure pop is a number 0-100
           const rainChance = typeof day.pop === 'number' ? Math.round(day.pop) : 0
           const showRain = rainChance > 0
           
