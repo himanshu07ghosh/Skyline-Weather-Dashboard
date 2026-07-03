@@ -70,7 +70,6 @@ export async function getWeatherByCoords(lat, lon, units = 'metric') {
   // Get current time
   const now = new Date()
   const currentHour = now.getHours()
-  const currentDate = now.toISOString().split('T')[0]
 
   // Build 24-hour forecast
   const hourlyData = data.hourly.time.map((time, i) => {
@@ -83,14 +82,13 @@ export async function getWeatherByCoords(lat, lon, units = 'metric') {
       condition: weather.condition,
       description: weather.condition.toLowerCase(),
       icon: weather.icon,
-      pop: data.hourly.precipitation_probability[i] || 0, // Rain chance!
+      pop: data.hourly.precipitation_probability[i] || 0,
     }
   })
 
   // Get current weather (find the closest hour to now)
   let currentWeather = hourlyData.find(h => h.hour === currentHour)
   if (!currentWeather) {
-    // If no exact match, use the first hour
     currentWeather = hourlyData[0]
   }
 
@@ -116,17 +114,30 @@ export async function getWeatherByCoords(lat, lon, units = 'metric') {
       condition: currentWeather.condition,
       description: currentWeather.description,
       icon: currentWeather.icon,
-      humidity: 0, // Open-Meteo free tier doesn't provide humidity
+      humidity: 0,
       wind_speed: 0,
       pressure: 0,
       visibility: 10,
       timezone: 0,
       coord: { lat, lon },
-      main: { temp: currentWeather.temp, feels_like: currentWeather.temp },
-      weather: [{ main: currentWeather.condition, description: currentWeather.description, icon: currentWeather.icon }],
+      main: { 
+        temp: currentWeather.temp, 
+        feels_like: currentWeather.temp,
+        temp_min: currentWeather.temp,
+        temp_max: currentWeather.temp,
+        humidity: 0,
+        pressure: 0
+      },
+      weather: [{ 
+        main: currentWeather.condition, 
+        description: currentWeather.description, 
+        icon: currentWeather.icon 
+      }],
+      wind: { speed: 0 },
+      sys: { sunrise: 0, sunset: 0 }
     },
     forecast: dailyData.slice(0, 5),
-    hourly: hourlyData.slice(0, 24), // 24 hours!
+    hourly: hourlyData.slice(0, 24),
     resolvedPlace: { name: 'Current Location', lat, lon }
   }
 }
