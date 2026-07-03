@@ -177,3 +177,19 @@ export async function searchCities(query) {
     display: `${place.name}${place.admin1 ? `, ${place.admin1}` : ''}, ${place.country}`
   }))
 }
+// Add this function to get city name from coordinates
+async function getCityNameFromCoords(lat, lon) {
+  try {
+    const url = `https://geocoding-api.open-meteo.com/v1/search?latitude=${lat}&longitude=${lon}&count=1&language=en&format=json`
+    const res = await fetch(url)
+    if (!res.ok) return 'Current Location'
+    const data = await res.json()
+    if (data.results && data.results.length > 0) {
+      const result = data.results[0]
+      return result.name || 'Current Location'
+    }
+    return 'Current Location'
+  } catch (error) {
+    return 'Current Location'
+  }
+}
