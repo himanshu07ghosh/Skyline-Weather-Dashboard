@@ -16,20 +16,24 @@ function checkKey() {
 
 /**
  * Resolve a free-text city search into a list of matching places.
- * Returns [{ name, state, country, lat, lon }]
+ * Returns [{ name, state, country, lat, lon, display }]
  */
 export async function searchCities(query) {
   checkKey()
+  if (!query || query.length < 2) return [] // Minimum 2 characters for suggestions
+  
   const url = `${GEO_URL}/direct?q=${encodeURIComponent(query)}&limit=5&appid=${API_KEY}`
   const res = await fetch(url)
   if (!res.ok) throw new Error('Could not search for that city right now.')
   const data = await res.json()
+  
   return data.map((place) => ({
     name: place.name,
-    state: place.state,
+    state: place.state || '',
     country: place.country,
     lat: place.lat,
     lon: place.lon,
+    display: `${place.name}${place.state ? `, ${place.state}` : ''}, ${place.country}`
   }))
 }
 
