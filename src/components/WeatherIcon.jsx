@@ -122,11 +122,14 @@ const MAP = {
   Haze: { day: Mist, night: Mist },
 }
 
-export default function WeatherIcon({ condition, icon, className }) {
+export default function WeatherIcon({ condition, icon, className, size }) {
   const isNight = icon?.endsWith('n')
   const set = MAP[condition] || MAP.Clouds
   const Cmp = isNight ? set.night : set.day
-  return <Cmp className={className} />
+  
+  const style = size ? { width: size, height: size } : {}
+  
+  return <Cmp className={className} style={style} />
 }
 
 export function conditionToMood(condition) {
