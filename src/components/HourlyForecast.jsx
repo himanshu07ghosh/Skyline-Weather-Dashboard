@@ -26,42 +26,37 @@ export default function HourlyForecast({ data, units }) {
       </div>
       
       <div className="hourly-scroll">
-        {data.map((entry, index) => (
-          <div 
-            key={index} 
-            className={`hourly-card ${isCurrentHour(entry.hour) ? 'current-hour' : ''}`}
-          >
-            <div className="hourly-time">
-              {index === 0 ? 'Now' : formatTime(entry.hour)}
-            </div>
-            
-            <WeatherIcon 
-              condition={entry.condition} 
-              icon={entry.icon} 
-              className="hourly-icon" 
-            />
-            
-            <div className="hourly-temp">
-              {entry.temp}{tempUnit}
-            </div>
-            
-            <div className="hourly-desc">
-              {entry.description}
-            </div>
-            
-            {entry.pop > 0 && (
-              <div className="hourly-rain">
-                <span className="rain-icon">☔</span>
-                <span className="rain-chance">{entry.pop}%</span>
+        {data.map((entry, index) => {
+          const showRain = entry.pop > 25 // Only show if rain chance > 25%
+          
+          return (
+            <div 
+              key={index} 
+              className={`hourly-card ${isCurrentHour(entry.hour) ? 'current-hour' : ''}`}
+            >
+              <div className="hourly-time">
+                {index === 0 ? 'Now' : formatTime(entry.hour)}
               </div>
-            )}
-            
-            <div className="hourly-details">
-              <span>💨 {entry.wind_speed} km/h</span>
-              <span>💧 {entry.humidity}%</span>
+              
+              <div className="hourly-temp">
+                {entry.temp}{tempUnit}
+              </div>
+              
+              <WeatherIcon 
+                condition={entry.condition} 
+                icon={entry.icon} 
+                className="hourly-icon" 
+              />
+              
+              {showRain && (
+                <div className="hourly-rain">
+                  <span className="rain-icon">☂️</span>
+                  <span className="rain-chance">{entry.pop}%</span>
+                </div>
+              )}
             </div>
-          </div>
-        ))}
+          )
+        })}
       </div>
     </section>
   )
