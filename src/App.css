@@ -610,3 +610,191 @@ input {
     font-size: 0.85rem;
   }
 }
+
+/* ========== Hourly Forecast ========== */
+.hourly-forecast {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-lg);
+  padding: 22px 20px;
+  box-shadow: var(--shadow-card);
+}
+
+.hourly-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 16px;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.hourly-header h3 {
+  margin: 0;
+  font-family: var(--font-display);
+  font-size: 1.05rem;
+}
+
+.hourly-subtitle {
+  font-size: 0.78rem;
+  color: var(--text-tertiary);
+  font-weight: 500;
+}
+
+.hourly-scroll {
+  display: flex;
+  gap: 12px;
+  overflow-x: auto;
+  padding: 8px 4px 12px 4px;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.hourly-scroll::-webkit-scrollbar {
+  height: 4px;
+}
+
+.hourly-scroll::-webkit-scrollbar-track {
+  background: var(--surface-alt);
+  border-radius: 2px;
+}
+
+.hourly-scroll::-webkit-scrollbar-thumb {
+  background: var(--accent-sky);
+  border-radius: 2px;
+}
+
+.hourly-card {
+  flex: 0 0 120px;
+  min-width: 110px;
+  background: var(--surface-alt);
+  border-radius: var(--radius-md);
+  padding: 14px 12px;
+  text-align: center;
+  scroll-snap-align: start;
+  transition: var(--transition);
+  border: 2px solid transparent;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 4px;
+}
+
+.hourly-card:hover {
+  transform: translateY(-4px);
+  box-shadow: var(--shadow-card);
+}
+
+.hourly-card.current-hour {
+  border-color: var(--accent-sky);
+  background: rgba(51, 98, 143, 0.08);
+  box-shadow: 0 0 0 2px rgba(51, 98, 143, 0.1);
+}
+
+.hourly-time {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-secondary);
+  font-family: var(--font-mono);
+}
+
+.hourly-icon {
+  width: 36px;
+  height: 36px;
+  color: var(--accent-sky);
+  margin: 2px 0;
+}
+
+.hourly-temp {
+  font-family: var(--font-mono);
+  font-size: 1.1rem;
+  font-weight: 600;
+}
+
+.hourly-desc {
+  font-size: 0.68rem;
+  color: var(--text-tertiary);
+  text-transform: capitalize;
+  min-height: 2.4em;
+  line-height: 1.2;
+}
+
+.hourly-rain {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #4A7CBF;
+  background: rgba(74, 124, 191, 0.1);
+  padding: 2px 10px;
+  border-radius: 20px;
+  margin: 2px 0;
+}
+
+.rain-icon {
+  font-size: 0.75rem;
+}
+
+.rain-chance {
+  font-family: var(--font-mono);
+}
+
+.hourly-details {
+  font-size: 0.6rem;
+  color: var(--text-tertiary);
+  display: flex;
+  gap: 8px;
+  margin-top: 2px;
+  flex-wrap: wrap;
+  justify-content: center;
+}
+
+.hourly-details span {
+  white-space: nowrap;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+  .hourly-card {
+    flex: 0 0 100px;
+    min-width: 90px;
+    padding: 12px 8px;
+  }
+  
+  .hourly-icon {
+    width: 30px;
+    height: 30px;
+  }
+  
+  .hourly-temp {
+    font-size: 1rem;
+  }
+  
+  .hourly-desc {
+    font-size: 0.6rem;
+  }
+  
+  .hourly-details {
+    font-size: 0.55rem;
+    flex-direction: column;
+    gap: 2px;
+  }
+}
+
+@media (max-width: 480px) {
+  .hourly-card {
+    flex: 0 0 85px;
+    min-width: 80px;
+    padding: 10px 6px;
+  }
+  
+  .hourly-temp {
+    font-size: 0.9rem;
+  }
+  
+  .hourly-rain {
+    font-size: 0.65rem;
+    padding: 1px 8px;
+  }
+}
