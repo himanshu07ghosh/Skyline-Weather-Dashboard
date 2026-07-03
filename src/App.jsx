@@ -150,7 +150,9 @@ export default function App() {
       </main>
 
       <footer className="app-footer">
-        <p>Built by : Himanshu Ghosh - with React &amp; the OpenWeatherMap API · Home base: Dehradun, Uttarakhand</p>
+        <p style={{ fontSize: '1.1rem' }}>
+          <strong>Built by : Himanshu Ghosh</strong> - with React &amp; the OpenWeatherMap API · Home base: Dehradun, Uttarakhand
+        </p>
       </footer>
     </div>
   )
