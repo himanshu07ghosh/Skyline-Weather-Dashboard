@@ -1,0 +1,131 @@
+import { useEffect, useState, useCallback } from 'react'
+import SearchBar from './components/SearchBar'
+import CurrentWeather from './components/CurrentWeather'
+import Forecast from './components/Forecast'
+import { getWeatherByCity, getWeatherByCoords } from './api/weather'
+import './App.css'
+
+const HOME_CITY = 'Dehradun'
+
+function getLocalTime(timezoneOffsetSeconds) {
+  const now = new Date()
+  const utc = now.getTime() + now.getTimezoneOffset() * 60000
+  const local = new Date(utc + timezoneOffsetSeconds * 1000)
+  return local.toLocaleString('en-US', {
+    weekday: 'long',
+    hour: 'numeric',
+    minute: '2-digit',
+  })
+}
+
+export default function App() {
+  const [weather, setWeather] = useState(null)
+  const [place, setPlace] = useState(null)
+  const [units, setUnits] = useState('metric')
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState(null)
+
+  const runSearch = useCallback(async (city, unitsOverride) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await getWeatherByCity(city, unitsOverride || units)
+      setWeather(result)
+      setPlace(result.resolvedPlace)
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }, [units])
+
+  const runCoords = useCallback(async (lat, lon, unitsOverride) => {
+    setLoading(true)
+    setError(null)
+    try {
+      const result = await getWeatherByCoords(lat, lon, unitsOverride || units)
+      setWeather(result)
+      setPlace({ name: result.current.name, country: result.current.sys.country })
+    } catch (err) {
+      setError(err.message)
+    } finally {
+      setLoading(false)
+    }
+  }, [units])
+
+  useEffect(() => {
+    runSearch(HOME_CITY)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
+
+  function handleUseLocation() {
+    if (!navigator.geolocation) {
+      setError('Geolocation is not supported by this browser.')
+      return
+    }
+    setLoading(true)
+    navigator.geolocation.getCurrentPosition(
+      (pos) => runCoords(pos.coords.latitude, pos.coords.longitude),
+      () => {
+        setError('Could not access your location. Search for a city instead.')
+        setLoading(false)
+      }
+    )
+  }
+
+  function handleToggleUnits() {
+    const next = units === 'metric' ? 'imperial' : 'metric'
+    setUnits(next)
+    if (place) {
+      runCoords(weather.resolvedPlace?.lat ?? weather.current.coord.lat, weather.resolvedPlace?.lon ?? weather.current.coord.lon, next)
+    }
+  }
+
+  return (
+    <div className="app">
+      <header className="app-header">
+        <div className="brand">
+          <span className="brand-mark" aria-hidden="true" />
+          <span className="brand-name">Skyline</span>
+        </div>
+        <SearchBar
+          onSearch={runSearch}
+          onUseLocation={handleUseLocation}
+          units={units}
+          onToggleUnits={handleToggleUnits}
+          loading={loading}
+        />
+      </header>
+
+      <main className="app-main">
+        {error && (
+          <div className="error-banner" role="alert">
+            {error}
+          </div>
+        )}
+
+        {loading && !weather && <div className="skeleton" aria-label="Loading weather data" />}
+
+        {weather && place && !loading && (
+          <>
+            <CurrentWeather
+              data={weather.current}
+              place={place}
+              units={units}
+              localTime={getLocalTime(weather.current.timezone)}
+            />
+            <Forecast days={weather.forecast} units={units} />
+          </>
+        )}
+
+        {weather && place && loading && (
+          <div className="reloading-hint">Updating…</div>
+        )}
+      </main>
+
+      <footer className="app-footer">
+        <p>Built by : Himanshu Ghosh - with React &amp; the OpenWeatherMap API · Home base: Dehradun, Uttarakhand</p>
+      </footer>
+    </div>
+  )
+}
