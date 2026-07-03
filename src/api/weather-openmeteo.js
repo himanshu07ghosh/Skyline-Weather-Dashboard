@@ -82,7 +82,7 @@ export async function getWeatherByCoords(lat, lon, units = 'metric') {
       condition: weather.condition,
       description: weather.condition.toLowerCase(),
       icon: weather.icon,
-      pop: data.hourly.precipitation_probability[i] || 0,
+      pop: data.hourly.precipitation_probability[i] || 0, // Already 0-100
     }
   })
 
@@ -102,7 +102,7 @@ export async function getWeatherByCoords(lat, lon, units = 'metric') {
       condition: weather.condition,
       description: weather.condition.toLowerCase(),
       icon: weather.icon,
-      pop: data.daily.precipitation_probability_max[i] || 0,
+      pop: Math.round(data.daily.precipitation_probability_max[i] || 0), // Ensure it's a round number 0-100
     }
   })
 
