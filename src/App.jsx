@@ -84,18 +84,44 @@ export default function App() {
   return (
     <div className="app">
       <header className="app-header">
-        <div className="brand">
-          <span className="brand-mark" aria-hidden="true" />
-          <span className="brand-name">Skyline</span>
+        <div className="brand" style={{ display: 'flex', alignItems: 'center', gap: '14px' }}>
+          <span className="brand-mark" aria-hidden="true" style={{ 
+            width: '28px', 
+            height: '28px', 
+            borderRadius: '8px',
+            background: 'linear-gradient(135deg, #33628f, #e59a52)',
+            boxShadow: '0 4px 12px rgba(51, 98, 143, 0.3)'
+          }} />
+          <div>
+            <div style={{ 
+              fontFamily: 'Space Grotesk, sans-serif',
+              fontWeight: 700,
+              fontSize: '1.8rem',
+              letterSpacing: '-0.02em',
+              color: 'var(--text-primary)',
+              lineHeight: '1.1'
+            }}>
+              Skyline Weather
+          </div>
+          <div style={{ 
+            fontSize: '0.7rem', 
+            color: 'var(--text-tertiary)',
+            fontWeight: 500,
+            letterSpacing: '0.05em',
+            textTransform: 'uppercase'
+          }}>
+            Real-time Weather Dashboard
+          </div>
         </div>
-        <SearchBar
-          onSearch={runSearch}
-          onUseLocation={handleUseLocation}
-          units={units}
-          onToggleUnits={handleToggleUnits}
-          loading={loading}
-        />
-      </header>
+      </div>
+      <SearchBar
+        onSearch={runSearch}
+        onUseLocation={handleUseLocation}
+        units={units}
+        onToggleUnits={handleToggleUnits}
+        loading={loading}
+      />
+    </header>
 
       <main className="app-main">
         {error && (
