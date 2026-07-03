@@ -54,7 +54,11 @@ export async function getWeatherByCoords(lat, lon, units = 'metric') {
   const current = await currentRes.json()
   const forecast = await forecastRes.json()
 
-  return { current, forecast: buildDailyForecast(forecast.list) }
+  return { 
+    current, 
+    forecast: buildDailyForecast(forecast.list),
+    hourly: getHourlyForecast(forecast.list) // Add hourly data
+  }
 }
 
 /**
@@ -105,4 +109,26 @@ function buildDailyForecast(list) {
         pop: Math.max(...entries.map((e) => e.pop ?? 0)),
       }
     })
+}
+/**
+ * Extract hourly forecast for the next 24 hours from the 3-hour forecast data
+ * Returns array of hourly data points (every 3 hours for next 24 hours = 8 points)
+ */
+export function getHourlyForecast(forecastList) {
+  // Take the first 8 entries (24 hours / 3 hours = 8)
+  const hourlyData = forecastList.slice(0, 8).map((entry) => ({
+    time: new Date(entry.dt * 1000),
+    hour: new Date(entry.dt * 1000).getHours(),
+    temp: Math.round(entry.main.temp),
+    feels_like: Math.round(entry.main.feels_like),
+    condition: entry.weather[0].main,
+    description: entry.weather[0].description,
+    icon: entry.weather[0].icon,
+    pop: Math.round((entry.pop || 0) * 100), // Rain chance as percentage
+    humidity: entry.main.humidity,
+    wind_speed: Math.round(entry.wind.speed * 3.6), // Convert to km/h
+    pressure: entry.main.pressure,
+  }))
+  
+  return hourlyData
 }
