@@ -4,6 +4,24 @@ import CurrentWeather from './components/CurrentWeather'
 import Forecast from './components/Forecast'
 import { getWeatherByCity, getWeatherByCoords } from './api/weather'
 import './App.css'
+import HourlyForecast from './components/HourlyForecast'
+
+// Inside the return, after CurrentWeather and before Forecast:
+{weather && place && !loading && (
+  <>
+    <CurrentWeather
+      data={weather.current}
+      place={place}
+      units={units}
+      localTime={getLocalTime(weather.current.timezone)}
+    />
+    
+    {/* Add Hourly Forecast here */}
+    <HourlyForecast data={weather.hourly} units={units} />
+    
+    <Forecast days={weather.forecast} units={units} />
+  </>
+)}
 
 const HOME_CITY = 'Dehradun'
 
