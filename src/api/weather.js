@@ -37,9 +37,6 @@ export async function searchCities(query) {
   }))
 }
 
-/**
- * Current conditions + 5 day / 3 hour forecast for a given lat/lon.
- */
 export async function getWeatherByCoords(lat, lon, units = 'metric') {
   checkKey()
   const [currentRes, forecastRes] = await Promise.all([
@@ -57,7 +54,7 @@ export async function getWeatherByCoords(lat, lon, units = 'metric') {
   return { 
     current, 
     forecast: buildDailyForecast(forecast.list),
-    hourly: getHourlyForecast(forecast.list) // Add hourly data
+    hourly: getHourlyForecast24(forecast.list) // Using new 24-hour function
   }
 }
 
