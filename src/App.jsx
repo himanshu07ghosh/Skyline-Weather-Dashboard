@@ -1,27 +1,10 @@
 import { useEffect, useState, useCallback } from 'react'
 import SearchBar from './components/SearchBar'
 import CurrentWeather from './components/CurrentWeather'
+import HourlyForecast from './components/HourlyForecast'
 import Forecast from './components/Forecast'
 import { getWeatherByCity, getWeatherByCoords } from './api/weather'
 import './App.css'
-import HourlyForecast from './components/HourlyForecast'
-
-// Inside the return, after CurrentWeather and before Forecast:
-{weather && place && !loading && (
-  <>
-    <CurrentWeather
-      data={weather.current}
-      place={place}
-      units={units}
-      localTime={getLocalTime(weather.current.timezone)}
-    />
-    
-    {/* Add Hourly Forecast here */}
-    <HourlyForecast data={weather.hourly} units={units} />
-    
-    <Forecast days={weather.forecast} units={units} />
-  </>
-)}
 
 const HOME_CITY = 'Dehradun'
 
@@ -94,8 +77,10 @@ export default function App() {
   function handleToggleUnits() {
     const next = units === 'metric' ? 'imperial' : 'metric'
     setUnits(next)
-    if (place) {
-      runCoords(weather.resolvedPlace?.lat ?? weather.current.coord.lat, weather.resolvedPlace?.lon ?? weather.current.coord.lon, next)
+    if (place && weather) {
+      const lat = weather.resolvedPlace?.lat ?? weather.current.coord.lat
+      const lon = weather.resolvedPlace?.lon ?? weather.current.coord.lon
+      runCoords(lat, lon, next)
     }
   }
 
@@ -120,26 +105,26 @@ export default function App() {
               lineHeight: '1.1'
             }}>
               Skyline Weather
-          </div>
-          <div style={{ 
-            fontSize: '0.7rem', 
-            color: 'var(--text-tertiary)',
-            fontWeight: 500,
-            letterSpacing: '0.05em',
-            textTransform: 'uppercase'
-          }}>
-            Real-time Weather Dashboard
+            </div>
+            <div style={{ 
+              fontSize: '0.7rem', 
+              color: 'var(--text-tertiary)',
+              fontWeight: 500,
+              letterSpacing: '0.05em',
+              textTransform: 'uppercase'
+            }}>
+              Real-time Weather Dashboard
+            </div>
           </div>
         </div>
-      </div>
-      <SearchBar
-        onSearch={runSearch}
-        onUseLocation={handleUseLocation}
-        units={units}
-        onToggleUnits={handleToggleUnits}
-        loading={loading}
-      />
-    </header>
+        <SearchBar
+          onSearch={runSearch}
+          onUseLocation={handleUseLocation}
+          units={units}
+          onToggleUnits={handleToggleUnits}
+          loading={loading}
+        />
+      </header>
 
       <main className="app-main">
         {error && (
@@ -158,6 +143,12 @@ export default function App() {
               units={units}
               localTime={getLocalTime(weather.current.timezone)}
             />
+            
+            {/* Hourly Forecast - Next 24 hours */}
+            {weather.hourly && weather.hourly.length > 0 && (
+              <HourlyForecast data={weather.hourly} units={units} />
+            )}
+            
             <Forecast days={weather.forecast} units={units} />
           </>
         )}
