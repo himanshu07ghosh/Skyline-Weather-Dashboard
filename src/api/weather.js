@@ -132,3 +132,64 @@ export function getHourlyForecast(forecastList) {
   
   return hourlyData
 }
+
+/**
+ * Get hourly forecast data (24 hours) from the forecast list
+ * Returns 24 data points (one per hour) by interpolating 3-hour data
+ */
+export function getHourlyForecast24(forecastList) {
+  const hourlyData = []
+  
+  // Get the first 9 points (covers 24 hours)
+  const baseData = forecastList.slice(0, 9)
+  
+  for (let i = 0; i < baseData.length - 1; i++) {
+    const current = baseData[i]
+    const next = baseData[i + 1]
+    
+    // Get current hour entry
+    hourlyData.push({
+      time: new Date(current.dt * 1000),
+      hour: new Date(current.dt * 1000).getHours(),
+      temp: Math.round(current.main.temp),
+      condition: current.weather[0].main,
+      description: current.weather[0].description,
+      icon: current.weather[0].icon,
+      pop: Math.round((current.pop || 0) * 100),
+    })
+    
+    // Generate interpolated entries for the next 2 hours
+    for (let hour = 1; hour < 3; hour++) {
+      const fraction = hour / 3
+      const temp = current.main.temp + (next.main.temp - current.main.temp) * fraction
+      const pop = (current.pop || 0) + ((next.pop || 0) - (current.pop || 0)) * fraction
+      
+      const date = new Date(current.dt * 1000 + hour * 3600000)
+      
+      hourlyData.push({
+        time: date,
+        hour: date.getHours(),
+        temp: Math.round(temp),
+        condition: current.weather[0].main,
+        description: current.weather[0].description,
+        icon: current.weather[0].icon,
+        pop: Math.round(pop * 100),
+      })
+    }
+  }
+  
+  // Add the last entry
+  const last = baseData[baseData.length - 1]
+  hourlyData.push({
+    time: new Date(last.dt * 1000),
+    hour: new Date(last.dt * 1000).getHours(),
+    temp: Math.round(last.main.temp),
+    condition: last.weather[0].main,
+    description: last.weather[0].description,
+    icon: last.weather[0].icon,
+    pop: Math.round((last.pop || 0) * 100),
+  })
+  
+  // Return first 24 entries
+  return hourlyData.slice(0, 24)
+}
