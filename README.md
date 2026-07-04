@@ -17,7 +17,7 @@ Deployed Live Project : [Live Link 🔗🔗](https://skyline-weather-app-himansh
 
 Download the latest APK for Android:
 
-[📥 Download Skyline Weather APK v1.0.0](https://github.com/himanshu07ghosh/skyline-weather-app/releases/download/v1.0.0/app-release.apk)
+[📥 Download Skyline Weather APK v1.0.0](https://github.com/himanshu07ghosh/skyline-weather-app/releases/download/v2.1.0/app-release.apk)
 
 
 ---
