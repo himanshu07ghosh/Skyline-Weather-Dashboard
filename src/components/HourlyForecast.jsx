@@ -18,16 +18,36 @@ export default function HourlyForecast({ data, units }) {
     return hour === now.getHours()
   }
 
+  // Filter to show only current and future hours
+  const now = new Date()
+  const currentHour = now.getHours()
+  
+  // Find the index of the current hour in the data
+  let startIndex = data.findIndex(entry => entry.hour === currentHour)
+  
+  // If current hour not found, start from 0
+  if (startIndex === -1) startIndex = 0
+  
+  // Get only current and future hours (max 24)
+  const futureData = data.slice(startIndex, startIndex + 24)
+  
+  // If we don't have enough hours, wrap around to the next day
+  if (futureData.length < 24) {
+    const remaining = 24 - futureData.length
+    futureData.push(...data.slice(0, remaining))
+  }
+
   return (
     <section className="hourly-forecast">
       <div className="hourly-header">
-        <h3>📍 Hourly Forecast</h3>
+        <h3>🔍 Hourly Forecast</h3>
         <span className="hourly-subtitle">Next 24 hours</span>
       </div>
       
       <div className="hourly-scroll">
-        {data.map((entry, index) => {
-          const showRain = entry.pop > 25 // Only show if rain chance > 25%
+        {futureData.map((entry, index) => {
+          const showRain = entry.pop > 25
+          const isNow = index === 0 // First card is always "Now"
           
           return (
             <div 
@@ -35,7 +55,7 @@ export default function HourlyForecast({ data, units }) {
               className={`hourly-card ${isCurrentHour(entry.hour) ? 'current-hour' : ''}`}
             >
               <div className="hourly-time">
-                {index === 0 ? 'Now' : formatTime(entry.hour)}
+                {isNow ? 'Now' : formatTime(entry.hour)}
               </div>
               
               <div className="hourly-temp">
