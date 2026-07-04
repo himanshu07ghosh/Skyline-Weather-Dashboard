@@ -9,9 +9,19 @@ and laptop.
 
 ## Live Links :-
 
-Deployed Live Project : [Live Link 🔗🔗](https://nodejs.org)
+Deployed Live Project : [Live Link 🔗🔗](https://skyline-weather-app-himanshughosh.vercel.app/)
 
 ---
+
+## 📱 Android App
+
+Download the latest APK for Android:
+
+[📥 Download Skyline Weather APK v1.0.0](https://github.com/himanshu07ghosh/skyline-weather-app/releases/download/v1.0.0/app-release.apk)
+
+
+---
+
 
 ## Tech stack
 
